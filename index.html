@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>etchASketch - ghettoTech</title>
+  <style>
+    body {
+      margin: 0;
+    }
+    #container {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+    }
+    .column {
+      display: flex;
+      flex-direction: column;
+    }
+    .cell {
+      background-color: #990000;
+    }
+    .cell-hover {
+      background-color: yellow;
+    }
+  </style>
+</head>
+<body>
+  <button id="reset-button">Reset</button>
+  <div id='container'></div>
+
+  <script>
+    function createColumns(numberOfColumns) {
+      for (let i = 0; i < numberOfColumns; i++) {
+        const newColumn = document.createElement('div');
+        newColumn.setAttribute('id', 'column-' + i);
+        const container = document.getElementById('container');
+        container.appendChild(newColumn);
+        createCells( 'column-' + i, numberOfColumns);
+      }
+      resizeCells(numberOfColumns);
+      const cells = Array.from(document.querySelectorAll('.cell'));
+      cells.forEach(cell => cell.addEventListener('mouseover', drawPath));
+    }
+
+    function createCells(columnId, numberOfColumns) {
+      for (let i = 0; i < numberOfColumns; i++) {
+        const newCell = document.createElement('div');
+        newCell.setAttribute('class', 'cell');
+        const container = document.getElementById(columnId);
+        container.appendChild(newCell);
+      }
+    }
+
+    function drawPath(e) {
+      //if (e.propertyName !== 'hover') return;
+      e.target.classList.add('cell-hover');
+      //console.log(e);
+    }
+
+    function removeCells() {
+      const cells = document.getElementById('container');
+      while (cells.firstChild) {
+        cells.removeChild(cells.firstChild);
+      }
+    }
+
+    function resetCalled() {
+      removeCells();
+      createColumns(prompt("How big do you want the grid to be?",16));
+    }
+
+    function resizeCells(numberOfColumns) {
+      let boxSide = window.innerHeight/numberOfColumns;
+      const cells = Array.from(document.querySelectorAll('.cell'));
+      cells.forEach(cell => {
+        cell.style.width = boxSide + "px";
+        cell.style.height = boxSide + "px";
+      });
+    }
+
+    createColumns(16);
+    document.getElementById('reset-button').addEventListener('click',resetCalled);
+  </script>
+</body>
+</html>
